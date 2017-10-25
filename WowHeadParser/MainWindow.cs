@@ -38,8 +38,7 @@ namespace WowHeadParser
             comboBoxEntity.Items.Add("Quest");
             comboBoxEntity.Items.Add("Item");
             comboBoxEntity.Items.Add("Zone");
-            comboBoxEntity.Items.Add("Trésor");
-            comboBoxEntity.Items.Add("Marché Noir");
+            comboBoxEntity.Items.Add("BlackMarket");
 
             comboBoxLocale.Items.Add("www");
             comboBoxLocale.Items.Add("fr");
@@ -240,14 +239,8 @@ namespace WowHeadParser
                     selectList.Items.Add("Fishing");
                     break;
                 }
-                // Trésor
-                case 5:
-                {
-                    selectList.Items.Add("Débug");
-                    break;
-                }
                 // Marché Noir
-                case 6:
+                case 5:
                 {
                     selectList.Items.Add("Débug");
                     break;
@@ -276,8 +269,7 @@ namespace WowHeadParser
                 case 2: return new Quest(id);
                 case 3: return new Item(id);
                 case 4: return new ZoneEntity(id);
-                case 5: return new Treasure(id);
-                case 6: return new BlackMarket(id);
+                case 5: return new BlackMarket(id);
             }
 
             return null;
