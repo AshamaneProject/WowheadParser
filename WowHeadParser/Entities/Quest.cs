@@ -32,8 +32,11 @@ namespace WowHeadParser.Entities
             m_builderEnder = new SqlBuilder("creature_questender", "id");
             m_builderEnder.SetFieldsNames("quest");
 
-            m_builderSerie = new SqlBuilder("quest_template_addon", "id", SqlQueryType.Update);
-            m_builderSerie.SetFieldsNames("PrevQuestID");
+            m_builderSerieWithPrevious = new SqlBuilder("quest_template_addon", "id", SqlQueryType.Update);
+            m_builderSerieWithPrevious.SetFieldsNames("PrevQuestID", "ExclusiveGroup");
+
+            m_builderSerieWithoutPrevious = new SqlBuilder("quest_template_addon", "id", SqlQueryType.Update);
+            m_builderSerieWithoutPrevious.SetFieldsNames("ExclusiveGroup");
 
             m_builderRequiredTeam = new SqlBuilder("quest_template", "id", SqlQueryType.Update);
             m_builderRequiredTeam.SetFieldsNames("requiredTeam");
@@ -131,10 +134,14 @@ namespace WowHeadParser.Entities
                 doc.LoadXml(serieXml);
 
                 XmlNodeList trs = doc.DocumentElement.SelectNodes("tr");
-                List<String> questInSerie = new List<String>();
+                Dictionary<int, List<String>> questInSerieByStep = new Dictionary<int, List<String>>();
+                int step = 0;
 
                 foreach (XmlNode tr in trs)
                 {
+                    int currentStep = step++;
+                    questInSerieByStep.Add(currentStep, new List<string>());
+
                     XmlNode td = tr.SelectSingleNode("td");
 
                     if (td == null)
@@ -144,36 +151,46 @@ namespace WowHeadParser.Entities
 
                     if (div == null)
                         continue;
+                    
+                    XmlNode b           = div.SelectSingleNode("b");
+                    XmlNodeList aList   = div.SelectNodes("a");
 
-                    XmlNode a = div.SelectSingleNode("a");
+                    // Current quest is writed with a simple "b" html tag
+                    if (div.SelectSingleNode("b") != null)
+                        questInSerieByStep[currentStep].Add(m_data.id.ToString());
 
-                    if (a == null)
+                    foreach (XmlNode a in aList)
                     {
-                        if (div.SelectSingleNode("b") != null)
-                            questInSerie.Add(m_data.id.ToString());
+                        XmlNode hrefAttr = a.Attributes.GetNamedItem("href");
 
-                        continue;
+                        if (hrefAttr == null)
+                            continue;
+
+                        String href = hrefAttr.Value;
+                        String questId = href.Substring(7);
+
+                        questInSerieByStep[currentStep].Add(questId);
                     }
-
-                    XmlNode hrefAttr = a.Attributes.GetNamedItem("href");
-
-                    if (hrefAttr == null)
-                        continue;
-
-                    String href = hrefAttr.Value;
-                    String questId = href.Substring(7);
-                    questInSerie.Add(questId);
                 }
 
-                if (questInSerie.Count < 2)
+                if (questInSerieByStep.Count < 2)
                     return;
 
-                for (int i = questInSerie.Count - 1; i > 0; --i)
+                for (int i = questInSerieByStep.Count - 1; i >= 0; --i)
                 {
-                    String currentQuest = questInSerie[i];
-                    String previousQuest = questInSerie[i - 1];
+                    String previousQuest = i > 0 ? questInSerieByStep[i - 1][0]: "";
 
-                    m_builderSerie.AppendFieldsValue(currentQuest, previousQuest);
+                    String exclusiveGroup = "0";
+                    if (questInSerieByStep[i].Count > 1)
+                        exclusiveGroup = "-" + questInSerieByStep[i][0];
+
+                    foreach (String questId in questInSerieByStep[i])
+                    {
+                        if (previousQuest != "")
+                            m_builderSerieWithPrevious.AppendFieldsValue(questId, previousQuest, exclusiveGroup);
+                        else
+                            m_builderSerieWithoutPrevious.AppendFieldsValue(questId, exclusiveGroup);
+                    }
                 }
             }
             catch (Exception ex)
@@ -198,7 +215,8 @@ namespace WowHeadParser.Entities
 
             if (IsCheckboxChecked("serie"))
             {
-                sqlRequest += m_builderSerie.ToString();
+                sqlRequest += m_builderSerieWithPrevious.ToString();
+                sqlRequest += m_builderSerieWithoutPrevious.ToString();
             }
 
             if (IsCheckboxChecked("team"))
@@ -213,7 +231,8 @@ namespace WowHeadParser.Entities
 
         protected SqlBuilder m_builderStarter;
         protected SqlBuilder m_builderEnder;
-        protected SqlBuilder m_builderSerie;
+        protected SqlBuilder m_builderSerieWithPrevious;
+        protected SqlBuilder m_builderSerieWithoutPrevious;
         protected SqlBuilder m_builderRequiredTeam;
     }
 }
