@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 
 namespace WowHeadParser
@@ -133,10 +134,25 @@ namespace WowHeadParser
 
     class Tools
     {
-        public static String GetHtmlFromWowhead(String url)
+        public static HttpClient InitHttpClient()
         {
-            WowheadWebclient webClient = new WowheadWebclient();
-            return webClient.DownloadString(url);
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
+            return httpClient;
+        }
+
+        public static String GetHtmlFromWowhead(String url, HttpClient webClient = null)
+        {
+            if (webClient == null)
+                webClient = InitHttpClient();
+
+            using (HttpResponseMessage response = webClient.GetAsync(url).Result)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    return content.ReadAsStringAsync().Result;
+                }
+            }
         }
 
         public static String GetWowheadUrl(String type, String id)

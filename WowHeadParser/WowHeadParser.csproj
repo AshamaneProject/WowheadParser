@@ -41,6 +41,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,7 +65,6 @@
     <Compile Include="SqlBuilder\SqlBuilderException.cs" />
     <Compile Include="SqlBuilder\SqlItem.cs" />
     <Compile Include="Classes\Tools.cs" />
-    <Compile Include="Classes\WowheadWebclient.cs" />
     <Compile Include="Classes\Zone.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>

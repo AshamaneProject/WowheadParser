@@ -5,6 +5,7 @@ using Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace WowHeadParser.Entities
         {
             m_hasZoneData = false;
             isError = false;
+            webClient = null;
         }
 
         static public String GetWowheadBaseUrl()
@@ -54,5 +56,7 @@ namespace WowHeadParser.Entities
         protected bool m_hasZoneData;
 
         static private String m_baseWowheadUrl = "";
+
+        public HttpClient webClient;
     }
 }

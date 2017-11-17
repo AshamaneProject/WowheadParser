@@ -4,13 +4,14 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Net.Http;
 using WowHeadParser.Entities;
 
 namespace WowHeadParser
 {
     class Range
     {
-        const int MAX_WORKER = 100;
+        const int MAX_WORKER = 20;
 
         public Range(MainWindow view, String fileName)
         {
@@ -18,6 +19,7 @@ namespace WowHeadParser
             m_index = 0;
             m_parsedEntitiesCount = 0;
             m_getRangeListBackgroundWorker = new BackgroundWorker[MAX_WORKER];
+            m_webClients = new HttpClient[MAX_WORKER];
 
             m_fileName = fileName;
             m_lastEstimateTime = 0;
@@ -46,11 +48,11 @@ namespace WowHeadParser
 
             for (int i = 0; i < maxWorkers; ++i)
             {
+                m_webClients[i] = Tools.InitHttpClient();
+
                 m_getRangeListBackgroundWorker[i] = new BackgroundWorker();
                 m_getRangeListBackgroundWorker[i].DoWork += new DoWorkEventHandler(BackgroundWorkerProcessEntitiesList);
                 m_getRangeListBackgroundWorker[i].RunWorkerCompleted += new RunWorkerCompletedEventHandler(BackgroundWorkerProcessEntitiesCompleted);
-                m_getRangeListBackgroundWorker[i].WorkerReportsProgress = true;
-                m_getRangeListBackgroundWorker[i].WorkerSupportsCancellation = true;
                 m_getRangeListBackgroundWorker[i].RunWorkerAsync(i);
             }
         }
@@ -65,6 +67,7 @@ namespace WowHeadParser
             {
                 e.Result = e.Argument;
                 Entity entity = m_view.CreateNeededEntity(m_from + tempIndex);
+                entity.webClient = m_webClients[(int)e.Result];
                 entity.ParseSingleJson();
                 String requestText = "\n\n" + entity.GetSQLRequest();
                 requestText += requestText != "" ? "\n" : "";
@@ -105,9 +108,7 @@ namespace WowHeadParser
                 return;
 
             int workerIndex = (int)e.Result;
-
-            if (!m_getRangeListBackgroundWorker[workerIndex].IsBusy)
-                m_getRangeListBackgroundWorker[workerIndex].RunWorkerAsync(workerIndex);
+            m_getRangeListBackgroundWorker[workerIndex].RunWorkerAsync(workerIndex);
         }
 
         private void EstimateSecondsTimeLeft()
@@ -140,6 +141,7 @@ namespace WowHeadParser
         private int m_parsedEntitiesCount;
 
         private BackgroundWorker[] m_getRangeListBackgroundWorker;
+        private HttpClient[] m_webClients;
 
         // Test
         private int m_timestamp;

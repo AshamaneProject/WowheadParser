@@ -143,7 +143,7 @@ namespace WowHeadParser.Entities
             else if (m_creatureTemplateData.id == 0 && id != 0)
                 m_creatureTemplateData.id = id;
 
-            String creatureHtml = Tools.GetHtmlFromWowhead(GetWowheadUrl());
+            String creatureHtml = Tools.GetHtmlFromWowhead(GetWowheadUrl(), webClient);
 
             if (creatureHtml.Contains("inputbox-error"))
                 return false;
