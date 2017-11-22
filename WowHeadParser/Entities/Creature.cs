@@ -122,7 +122,7 @@ namespace WowHeadParser.Entities
 
         public override List<Entity> GetIdsFromZone(String zoneId, String zoneHtml)
         {
-            String pattern = @"new Listview\({template: 'npc', id: 'npcs', name: LANG\.tab_npcs, tabs: tabsRelated, parent: 'lkljbjkb574', note: \$WH\.sprintf\(LANG\.lvnote_filterresults, '\/npcs\?filter=cr=6;crs=" + zoneId + @";crv=0'\), data: (.+)}\);";
+            String pattern = @"new Listview\(\{template: 'npc', id: 'npcs', name: LANG\.tab_npcs, tabs: tabsRelated, parent: 'lkljbjkb574', note: WH\.sprintf\(LANG\.lvnote_filterresults, '\/npcs\?filter=cr=6;crs=" + zoneId + @";crv=0'\), data: (.+)\}\);";
             String creatureJSon = Tools.ExtractJsonFromWithPattern(zoneHtml, pattern);
 
             List<CreatureTemplateParsing> parsingArray = JsonConvert.DeserializeObject<List<CreatureTemplateParsing>>(creatureJSon);
