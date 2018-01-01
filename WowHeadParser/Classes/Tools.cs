@@ -157,7 +157,10 @@ namespace WowHeadParser
 
         public static String GetWowheadUrl(String type, String id)
         {
-            return "http://fr.wowhead.com/" + type + "=" + id;
+            if (type != "")
+                return "http://fr.wowhead.com/" + type + "=" + id;
+            else
+                return "http://fr.wowhead.com/" + id;
         }
 
         public static String GetFileNameForCurrentTime()
@@ -165,18 +168,36 @@ namespace WowHeadParser
             return DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss") + ".sql";
         }
 
-        public static String ExtractJsonFromWithPattern(String input, String pattern, int groupIndex = 1)
+        public static List<String> ExtractListJsonFromWithPattern(String input, String pattern)
         {
             Regex parseJSonRegex = new Regex(pattern);
-            Match jSonMatch = parseJSonRegex.Match(input);
+            MatchCollection jSonMatch = parseJSonRegex.Matches(input);
 
-            if (!jSonMatch.Success)
+            List<String> returnList = new List<String>();
+            foreach (Match match in jSonMatch)
+            {
+                if (match.Success != true)
+                    continue;
+
+                short i = 0;
+                foreach (Group group in match.Groups)
+                {
+                    if (i++ != 0)
+                        returnList.Add(group.Value);
+                }
+            }
+
+            return returnList;
+        }
+
+        public static String ExtractJsonFromWithPattern(String input, String pattern, int groupIndex = 0)
+        {
+            List<String> extractedValues = ExtractListJsonFromWithPattern(input, pattern);
+
+            if (extractedValues.Count <= groupIndex)
                 return null;
 
-            if (jSonMatch.Groups.Count < (groupIndex + 1))
-                return null;
-
-            String jsonString = jSonMatch.Groups[groupIndex].Value;
+            String jsonString = extractedValues[groupIndex];
 
             jsonString = jsonString.Replace("undefined",    "\"undefined\"");
             jsonString = jsonString.Replace("[,1]",         "[0,1]");
@@ -424,6 +445,12 @@ namespace WowHeadParser
             }
 
             return 0;
+        }
+
+        public static UInt32 GetClassMaskFromClassId(String strClassId)
+        {
+            UInt32 classId = UInt32.Parse(strClassId);
+            return Convert.ToUInt32(Math.Pow(2, classId - 1));
         }
 
         private static List<ItemExtendedCostEntry> m_itemExtendedCost = null;

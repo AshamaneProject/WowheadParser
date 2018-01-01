@@ -82,8 +82,8 @@ namespace WowHeadParser.Entities
             String gameobjectDataPattern = @"\$\.extend\(g_objects\[" + m_data.id + @"\], (.+)\);";
             String gameobjectLootPattern = @"new Listview\(\{template: 'item', id: 'contains', name: LANG.tab_contains, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview.extraCols.count, Listview.extraCols.percent(?:, Listview\.extraCols\.mode)?\], sort:\['-percent', 'name'\], _totalCount: [0-9]+, computeDataFunc: Listview.funcBox.initLootTable, onAfterCreate: Listview.funcBox.addModeIndicator, data: (.+)\}\);";
             String gameobjectLootCurrencyPattern = @"new Listview\({template: 'currency', id: 'contains-currency', name: LANG\.tab_currencies, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'\], _totalCount: [0-9]+, computeDataFunc: Listview\.funcBox\.initLootTable, onAfterCreate: Listview\.funcBox\.addModeIndicator, data: (.+)}\);";
-            String gameobjectHerboPattern = @"new Listview\(\{template: 'item', id: 'herbalism', name: LANG.tab_herbalism, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview.extraCols.count, Listview.extraCols.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview.funcBox.initLootTable, note: \$WH\.sprintf\(LANG.lvnote_objectherbgathering, [0-9]+\), _totalCount: ([0-9]+), data: (.+)\}\);";
-            String gameobjectMiningPattern = @"new Listview\(\{template: 'item', id: 'mining', name: LANG\.tab_mining, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: \$WH\.sprintf\(LANG\.lvnote_objectmining, [0-9]+\), _totalCount: ([0-9]+), data: (.+)\}\);";
+            String gameobjectHerboPattern = @"new Listview\(\{template: 'item', id: 'herbalism', name: LANG.tab_herbalism, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview.extraCols.count, Listview.extraCols.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview.funcBox.initLootTable, note: WH\.sprintf\(LANG.lvnote_objectherbgathering, [0-9]+\), _totalCount: ([0-9]+), data: (.+)\}\);";
+            String gameobjectMiningPattern = @"new Listview\(\{template: 'item', id: 'mining', name: LANG\.tab_mining, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: WH\.sprintf\(LANG\.lvnote_objectmining, [0-9]+\), _totalCount: ([0-9]+), data: (.+)\}\);";
 
             String gameobjectDataJSon = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectDataPattern);
             if (gameobjectDataJSon != null)
@@ -100,16 +100,16 @@ namespace WowHeadParser.Entities
                 SetGameobjectLootData(gameobjectLootItemDatas, gameobjectLootCurrencyDatas);
             }
 
-            String gameobjectHerbalismTotalCount = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectHerboPattern, 1);
-            String gameobjectHerbalismJSon = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectHerboPattern, 2);
+            String gameobjectHerbalismTotalCount = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectHerboPattern, 0);
+            String gameobjectHerbalismJSon = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectHerboPattern, 1);
             if (gameobjectHerbalismJSon != null)
             {
                 GameObjectLootParsing[] gameobjectHerbalismDatas = JsonConvert.DeserializeObject<GameObjectLootParsing[]>(gameobjectHerbalismJSon);
                 SetGameobjectHerbalismOrMiningData(gameobjectHerbalismDatas, Int32.Parse(gameobjectHerbalismTotalCount), true);
             }
 
-            String gameobjectMiningTotalCount = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectMiningPattern, 1);
-            String gameobjectMiningJSon = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectMiningPattern, 2);
+            String gameobjectMiningTotalCount = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectMiningPattern, 0);
+            String gameobjectMiningJSon = Tools.ExtractJsonFromWithPattern(gameobjectHtml, gameobjectMiningPattern, 1);
             if (gameobjectMiningJSon != null)
             {
                 GameObjectLootParsing[] gameobjectMiningDatas = JsonConvert.DeserializeObject<GameObjectLootParsing[]>(gameobjectMiningJSon);
@@ -228,7 +228,7 @@ namespace WowHeadParser.Entities
                 m_gameobjectLootBuilder = new SqlBuilder("gameobject_loot_template", "entry", SqlQueryType.DeleteInsert);
                 m_gameobjectLootBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
-                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type = 3;\n";
+                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type IN (3, 50);\n";
                 foreach (GameObjectLootParsing gameobjectLootData in m_gameobjectLootDatas)
                 {
                     GameObjectLootCurrencyParsing currentLootCurrencyData = null;
@@ -265,11 +265,20 @@ namespace WowHeadParser.Entities
             if (IsCheckboxChecked("herbalism") && m_gameobjectHerbalismDatas != null)
             {
                 m_gameobjectHerbalismBuilder = new SqlBuilder("gameobject_loot_template", "entry", SqlQueryType.InsertIgnore);
-                m_gameobjectHerbalismBuilder.SetFieldsNames("item", "ChanceOrQuestChance", "lootmode", "groupid", "mincountOrRef", "maxcount", "itemBonuses");
+                m_gameobjectHerbalismBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
-                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type = 3;\n";
+                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type IN (3, 50);\n";
                 foreach (GameObjectLootParsing gameobjectHerbalismData in m_gameobjectHerbalismDatas)
-                    m_gameobjectHerbalismBuilder.AppendFieldsValue(m_data.id, gameobjectHerbalismData.id, gameobjectHerbalismData.percent, 1, 0, gameobjectHerbalismData.stack[0], gameobjectHerbalismData.stack[1], "");
+                    m_gameobjectHerbalismBuilder.AppendFieldsValue(m_data.id, // Entry
+                                                                   gameobjectHerbalismData.id, // Item
+                                                                   0, // Reference
+                                                                   gameobjectHerbalismData.percent, // Chance
+                                                                   0, // QuestRequired
+                                                                   1, // LootMode
+                                                                   0, // GroupId
+                                                                   gameobjectHerbalismData.stack[0], // MinCount
+                                                                   gameobjectHerbalismData.stack[1], // MaxCount
+                                                                   ""); // Comment
 
                 returnSql += m_gameobjectHerbalismBuilder.ToString() + "\n";
             }
@@ -277,11 +286,20 @@ namespace WowHeadParser.Entities
             if (IsCheckboxChecked("mining") && m_gameobjectMiningDatas != null)
             {
                 m_gameobjectMiningBuilder = new SqlBuilder("gameobject_loot_template", "entry", SqlQueryType.InsertIgnore);
-                m_gameobjectMiningBuilder.SetFieldsNames("item", "ChanceOrQuestChance", "lootmode", "groupid", "mincountOrRef", "maxcount", "itemBonuses");
+                m_gameobjectMiningBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
-                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type = 3;\n";
+                returnSql += "UPDATE gameobject_template SET data1 = " + m_data.id + " WHERE entry = " + m_data.id + " AND type IN (3, 50);\n";
                 foreach (GameObjectLootParsing gameobjectMiningData in m_gameobjectMiningDatas)
-                    m_gameobjectMiningBuilder.AppendFieldsValue(m_data.id, gameobjectMiningData.id, gameobjectMiningData.percent, 1, 0, gameobjectMiningData.stack[0], gameobjectMiningData.stack[1], "");
+                    m_gameobjectMiningBuilder.AppendFieldsValue(m_data.id, // Entry
+                                                                gameobjectMiningData.id, // Item
+                                                                0, // Reference
+                                                                gameobjectMiningData.percent, // Chance
+                                                                0, // QuestRequired
+                                                                1, // LootMode
+                                                                0, // GroupId
+                                                                gameobjectMiningData.stack[0], // MinCount
+                                                                gameobjectMiningData.stack[1], // MaxCount
+                                                                ""); // Comment
 
                 returnSql += m_gameobjectMiningBuilder.ToString() + "\n";
             }

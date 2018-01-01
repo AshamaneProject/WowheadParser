@@ -222,6 +222,7 @@ namespace WowHeadParser
                     selectList.Items.Add("starter/ender");
                     selectList.Items.Add("serie");
                     selectList.Items.Add("team");
+                    selectList.Items.Add("class");
                     break;
                 }
                 // Item

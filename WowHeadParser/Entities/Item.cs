@@ -37,6 +37,7 @@ namespace WowHeadParser.Entities
         {
             public int id;
             public int count;
+            public int[] stack;
         }
 
         public struct ItemDroppedByTemplateParsing
@@ -74,7 +75,7 @@ namespace WowHeadParser.Entities
             String qualityPattern = @"_\[" + m_data.id + @"\]" + "={\"name_frfr\":\"(?:.+?)\",\"quality\":([0-9])";
             String itemSpellPattern = @"new Listview\(\{template: 'spell', id: 'reagent-for', name: LANG\.tab_reagentfor, tabs: tabsRelated, parent: 'lkljbjkb574',.*(?:\n)?.*data: (.+)\}\);";
             String itemCreatePattern = @"new Listview\(\{template: 'item', id: 'creates', name: LANG\.tab_creates, tabs: tabsRelated, parent: 'lkljbjkb574', sort:\['name'\],.*(?:\n)?.*data: (.+)}\);";
-            String itemLootTemplatePattern = @"new Listview\(\{template: 'item', id: 'contains', name: LANG\.tab_contains, tabs: tabsRelated, parent: 'lkljbjkb574',\n* *extraCols: \[Listview\.extraCols\.count, Listview.extraCols.percent\], sort:\['-percent', 'name'\],\n* *computeDataFunc: Listview\.funcBox\.initLootTable, note: \$WH\.sprintf\(LANG\.lvnote_itemopening, [0-9]+\),\n* *_totalCount: ([0-9]+), data: (.+)\}\);";
+            String itemLootTemplatePattern = @"new Listview\(\{template: 'item', id: 'contains', name: LANG\.tab_contains, tabs: tabsRelated, parent: 'lkljbjkb574',\n* *extraCols: \[Listview\.extraCols\.count, Listview.extraCols.percent\], sort:\['-percent', 'name'\],\n* *computeDataFunc: Listview\.funcBox\.initLootTable, note: WH\.sprintf\(LANG\.lvnote_itemopening, [0-9]+\),\n* *_totalCount: ([0-9]+), data: (.+)\}\);";
             String itemDroppedByPattern = @"new Listview\(\{template: 'npc', id: 'dropped-by', name: LANG\.tab_droppedby, tabs: tabsRelated, parent: 'lkljbjkb574',\n* *hiddenCols: \['type'\], extraCols: \[Listview.extraCols.count, Listview.extraCols.percent\], sort:\['-percent', '-count', 'name'\],\n* *computeDataFunc: Listview.funcBox.initLootTable, data: (.+)}\);";
 
             String itemDataJSon = Tools.ExtractJsonFromWithPattern(itemHtml, dataPattern);
@@ -101,9 +102,9 @@ namespace WowHeadParser.Entities
                 m_itemCreateItemDatas = JsonConvert.DeserializeObject<ItemCreateItemParsing[]>(itemCreateJSon);
             }
 
-            String lootMaxCountStr      = Tools.ExtractJsonFromWithPattern(itemHtml, itemLootTemplatePattern, 1);
+            String lootMaxCountStr      = Tools.ExtractJsonFromWithPattern(itemHtml, itemLootTemplatePattern, 0);
             m_lootMaxCount              = lootMaxCountStr != null ? Int32.Parse(lootMaxCountStr): 0;
-            String itemLootTemplateJSon = Tools.ExtractJsonFromWithPattern(itemHtml, itemLootTemplatePattern, 2);
+            String itemLootTemplateJSon = Tools.ExtractJsonFromWithPattern(itemHtml, itemLootTemplatePattern, 1);
             if (itemLootTemplateJSon != null)
             {
                 m_itemLootTemplateDatas = JsonConvert.DeserializeObject<ItemLootTemplateParsing[]>(itemLootTemplateJSon);
@@ -158,26 +159,48 @@ namespace WowHeadParser.Entities
             if (IsCheckboxChecked("create item") && m_itemCreateItemDatas != null)
             {
                 m_spellLootTemplateBuilder = new SqlBuilder("spell_loot_template", "entry", SqlQueryType.InsertIgnore);
-                m_spellLootTemplateBuilder.SetFieldsNames("item", "ChanceOrQuestChance", "lootmode", "groupid", "mincountOrRef", "maxcount", "itemBonuses");
+                m_spellLootTemplateBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
-                foreach (ItemCreateItemParsing gameobjectLootData in m_itemCreateItemDatas)
-                    m_spellLootTemplateBuilder.AppendFieldsValue(m_itemSpellDatas[0].id, gameobjectLootData.id, "100", 1, 0, "1", "1", "");
+                foreach (ItemCreateItemParsing itemLootData in m_itemCreateItemDatas)
+                    m_spellLootTemplateBuilder.AppendFieldsValue(m_itemSpellDatas[0].id, // Entry
+                                                                 itemLootData.id, // Item
+                                                                 0, // Reference
+                                                                 "100", // Chance
+                                                                 0, // QuestRequired
+                                                                 1, // LootMode
+                                                                 0, // GroupId
+                                                                 "1", // MinCount
+                                                                 "1", // MaxCount
+                                                                 ""); // Comment
 
                 returnSql += m_spellLootTemplateBuilder.ToString() + "\n";
             }
 
             if (IsCheckboxChecked("loot") && m_itemLootTemplateDatas != null)
             {
-                m_spellLootTemplateBuilder = new SqlBuilder("item_loot_template", "entry", SqlQueryType.InsertIgnore);
-                m_spellLootTemplateBuilder.SetFieldsNames("item", "ChanceOrQuestChance", "lootmode", "groupid", "mincountOrRef", "maxcount", "itemBonuses");
+                m_itemLootTemplateBuilder = new SqlBuilder("item_loot_template", "entry", SqlQueryType.InsertIgnore);
+                m_itemLootTemplateBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
                 foreach (ItemLootTemplateParsing itemLootData in m_itemLootTemplateDatas)
                 {
                     String percent = ((float)itemLootData.count / (float)m_lootMaxCount * 100).ToString().Replace(",", ".");
-                    m_spellLootTemplateBuilder.AppendFieldsValue(m_data.id, itemLootData.id, percent, 1, 0, "1", "1", "");
+
+                    int minLootCount = itemLootData.stack.Length >= 1 ? itemLootData.stack[0] : 1;
+                    int maxLootCount = itemLootData.stack.Length >= 2 ? itemLootData.stack[1] : minLootCount;
+
+                    m_itemLootTemplateBuilder.AppendFieldsValue(m_data.id, // Entry
+                                                                itemLootData.id, // Item
+                                                                0, // Reference
+                                                                percent, // Chance
+                                                                0, // QuestRequired
+                                                                1, // LootMode
+                                                                0, // GroupId
+                                                                minLootCount, // MinCount
+                                                                maxLootCount, // MaxCount
+                                                                ""); // Comment
                 }
 
-                returnSql += m_spellLootTemplateBuilder.ToString() + "\n";
+                returnSql += m_itemLootTemplateBuilder.ToString() + "\n";
             }
 
             if (IsCheckboxChecked("dropped by") && m_itemDroppedByDatas != null)
@@ -235,6 +258,7 @@ namespace WowHeadParser.Entities
         protected ItemDroppedByTemplateParsing[] m_itemDroppedByDatas;
 
         protected SqlBuilder m_spellLootTemplateBuilder;
+        protected SqlBuilder m_itemLootTemplateBuilder;
         protected SqlBuilder m_itemDroppedByBuilder;
     }
 }

@@ -49,8 +49,8 @@ namespace WowHeadParser.Entities
 
             String fishingPattern = @"new Listview\(\{template: 'item', id: 'fishing', name: LANG\.tab_fishing, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: \$WH\.sprintf\(LANG\.lvnote_zonefishing, [0-9]+\), _totalCount: ([0-9]+), data: (.+)\}\);";
 
-            m_itemMaxCount = Int32.Parse(Tools.ExtractJsonFromWithPattern(zoneHTML, fishingPattern, 1));
-            String fishingJSon = Tools.ExtractJsonFromWithPattern(zoneHTML, fishingPattern, 2);
+            m_itemMaxCount = Int32.Parse(Tools.ExtractJsonFromWithPattern(zoneHTML, fishingPattern, 0));
+            String fishingJSon = Tools.ExtractJsonFromWithPattern(zoneHTML, fishingPattern, 1);
             if (fishingJSon != null)
             {
                 m_fishingDatas = JsonConvert.DeserializeObject<FishingParsing[]>(fishingJSon);

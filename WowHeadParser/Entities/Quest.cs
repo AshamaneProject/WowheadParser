@@ -40,6 +40,9 @@ namespace WowHeadParser.Entities
 
             m_builderRequiredTeam = new SqlBuilder("quest_template", "id", SqlQueryType.Update);
             m_builderRequiredTeam.SetFieldsNames("requiredTeam");
+
+            m_builderRequiredClass = new SqlBuilder("quest_template_addon", "id", SqlQueryType.Update);
+            m_builderRequiredClass.SetFieldsNames("AllowableClasses");
         }
 
         public Quest(int id) : this()
@@ -54,7 +57,7 @@ namespace WowHeadParser.Entities
 
         public override List<Entity> GetIdsFromZone(String zoneId, String zoneHtml)
         {
-            String pattern = @"new Listview\({template: 'quest', id: 'quests', name: LANG\.tab_quests, tabs: tabsRelated, parent: 'lkljbjkb574', computeDataFunc: Listview\.funcBox\.initQuestFilter, onAfterCreate: Listview\.funcBox\.addQuestIndicator,(?: note: \$WH\.sprintf\(LANG\.lvnote_zonequests, [0-9]+, " + zoneId + @", '[a-zA-ZÉèéêÎ’'\- ]+', " + zoneId + @"\),)? data: (.+)}\);";
+            String pattern = @"new Listview\({template: 'quest', id: 'quests', name: LANG\.tab_quests, tabs: tabsRelated, parent: 'lkljbjkb574', computeDataFunc: Listview\.funcBox\.initQuestFilter, onAfterCreate: Listview\.funcBox\.addQuestIndicator,(?: note: WH\.sprintf\(LANG\.lvnote_zonequests, [0-9]+, [0-9]+, '[a-zA-ZÉèéêîÎ’'\- ]+', [0-9]+\),)? data: (.+)}\);";
             String creatureJSon = Tools.ExtractJsonFromWithPattern(zoneHtml, pattern);
 
             List<CreatureTemplateParsing> parsingArray = JsonConvert.DeserializeObject<List<CreatureTemplateParsing>>(creatureJSon);
@@ -101,6 +104,9 @@ namespace WowHeadParser.Entities
             }
 
             SetTeam(isAlliance, isHorde);
+
+            List<String> questClass = Tools.ExtractListJsonFromWithPattern(questHtml, @"\[class=(\d+)\]");
+            SetClassRequired(questClass);
 
             return true;
         }
@@ -204,6 +210,18 @@ namespace WowHeadParser.Entities
             m_builderRequiredTeam.AppendFieldsValue(m_data.id, team);
         }
 
+        public void SetClassRequired(List<String> classIds)
+        {
+            UInt32 classMask = 0;
+            foreach (String classId in classIds)
+            {
+                classMask += Tools.GetClassMaskFromClassId(classId);
+            }
+
+            if (classMask != 0)
+                m_builderRequiredClass.AppendFieldsValue(m_data.id, classMask);
+        }
+
         public override String GetSQLRequest()
         {
             String sqlRequest = "";
@@ -224,6 +242,11 @@ namespace WowHeadParser.Entities
                 sqlRequest += m_builderRequiredTeam.ToString();
             }
 
+            if (IsCheckboxChecked("class"))
+            {
+                sqlRequest += m_builderRequiredClass.ToString();
+            }
+
             return sqlRequest;
         }
 
@@ -234,5 +257,6 @@ namespace WowHeadParser.Entities
         protected SqlBuilder m_builderSerieWithPrevious;
         protected SqlBuilder m_builderSerieWithoutPrevious;
         protected SqlBuilder m_builderRequiredTeam;
+        protected SqlBuilder m_builderRequiredClass;
     }
 }
