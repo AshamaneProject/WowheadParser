@@ -114,18 +114,17 @@ namespace WowHeadParser
 
     struct CurrencyTypesEntry
     {
-        public Int32 ID;                                                   // 0      m_ID
-        public Int32 Category;                                             // 1      m_CategoryID
-        public String m_NameLang;                                          // 2      m_NameLang
-        public String m_InventoryIcon;                                     // 3      m_InventoryIcon
-        public String m_InventoryIcon2;                                    // 4      m_InventoryIcon2
-        public Int32 m_SpellWeight;                                        // 5      m_SpellWeight
-        public Int32 m_SpellCategory;                                      // 6      m_SpellCategory
-        public Int32 TotalCap;                                             // 7      m_MaxQty
-        public Int32 WeekCap;                                              // 8      m_MaxEarnablePerWeek
-        public Int32 Flags;                                                // 9      m_Flags
-        public Int32 m_Quality;                                            // 10     m_Quality
-        public String m_DescriptionLang;                                   // 11     m_DescriptionLang
+        public UInt32 ID;
+        public String Name;
+        public UInt32 MaxQty;
+        public UInt32 MaxEarnablePerWeek;
+        public UInt32 Flags;
+        public String Description;
+        public Byte CategoryID;
+        public Byte SpellCategory;
+        public Byte Quality;
+        public UInt32 InventoryIconFileDataID;
+        public UInt32 SpellWeight;
 
         public bool HasPrecision()   { return (Flags & (int)CurrencyFlags.CURRENCY_FLAG_HIGH_PRECISION) != 0; }
         public bool HasSeasonCount() { return (Flags & (int)CurrencyFlags.CURRENCY_FLAG_HAS_SEASON_COUNT) != 0; }
@@ -251,7 +250,7 @@ namespace WowHeadParser
             if (m_currencyTemplate != null)
                 return;
 
-            m_currencyTemplate = new Dictionary<int, CurrencyTypesEntry>();
+            m_currencyTemplate = new Dictionary<UInt32, CurrencyTypesEntry>();
 
             List<String> allLines = new List<String>(File.ReadAllLines("Ressources/CurrencyTypes.db2.csv"));
 
@@ -263,18 +262,17 @@ namespace WowHeadParser
                 String[] values = line.Split(',');
 
                 int index = 0;
-                currencyTemplate.ID                 = Convert.ToInt32(values[index++]);
-                currencyTemplate.Category           = Convert.ToInt32(values[index++]);
-                currencyTemplate.m_NameLang         = values[index++];
-                currencyTemplate.m_InventoryIcon    = values[index++];
-                currencyTemplate.m_InventoryIcon2   = values[index++];
-                currencyTemplate.m_SpellWeight      = Convert.ToInt32(values[index++]);
-                currencyTemplate.m_SpellCategory    = Convert.ToInt32(values[index++]);
-                currencyTemplate.TotalCap           = Convert.ToInt32(values[index++]);
-                currencyTemplate.WeekCap            = Convert.ToInt32(values[index++]);
-                currencyTemplate.Flags              = Convert.ToInt32(values[index++]);
-                currencyTemplate.m_Quality          = Convert.ToInt32(values[index++]);
-                currencyTemplate.m_DescriptionLang  = values[index++];
+                currencyTemplate.ID                         = Convert.ToUInt32(values[index++]);
+                currencyTemplate.Name                       = values[index++];
+                currencyTemplate.MaxQty                     = Convert.ToUInt32(values[index++]);
+                currencyTemplate.MaxEarnablePerWeek         = Convert.ToUInt32(values[index++]);
+                currencyTemplate.Flags                      = Convert.ToUInt32(values[index++]);
+                currencyTemplate.Description                = values[index++];
+                currencyTemplate.CategoryID                 = Convert.ToByte(values[index++]);
+                currencyTemplate.SpellCategory              = Convert.ToByte(values[index++]);
+                currencyTemplate.Quality                    = Convert.ToByte(values[index++]);
+                currencyTemplate.InventoryIconFileDataID    = Convert.ToUInt32(values[index++]);
+                //currencyTemplate.SpellWeight                = Convert.ToUInt32(values[index++]);
 
                 m_currencyTemplate.Add(currencyTemplate.ID, currencyTemplate);
             }
@@ -379,7 +377,7 @@ namespace WowHeadParser
                         break;
                     }
 
-                    int precision = (int)m_currencyTemplate[(int)extendedCostEntry.RequiredCurrency[i]].GetPrecision();
+                    int precision = (int)m_currencyTemplate[extendedCostEntry.RequiredCurrency[i]].GetPrecision();
                     if (extendedCostEntry.RequiredCurrencyCount[i] != (currencyCount[i] * precision))
                     {
                         notMatch = true;
@@ -455,6 +453,6 @@ namespace WowHeadParser
 
         private static List<ItemExtendedCostEntry> m_itemExtendedCost = null;
         private static List<PlayerConditionEntry> m_playerConditions = null;
-        private static Dictionary<int, CurrencyTypesEntry> m_currencyTemplate = null;
+        private static Dictionary<UInt32, CurrencyTypesEntry> m_currencyTemplate = null;
     }
 }

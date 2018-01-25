@@ -1,78 +1,106 @@
-int,int,string,string,string,int,int,int,int,int,int,string
-1,1,"Test Jeton de système de monnaie 4","INV_Misc_Coin_09",,1,0,0,0,71682,1,"Un texte qui décrit l'objet figure ici."
-2,1,"Test Jeton de système de monnaie 2","ability_cheapshot",,1,2,0,0,12297,1,
-4,1,"Test Jeton de système de monnaie 5","INV_Misc_Coin_07",,4,3,0,0,1,1,
-22,41,"Birmingham Test Objet 3","INV-Sword_53",,0,0,0,0,0,1,
-42,1,"Ecusson de justice","Spell_Holy_ChampionsBond",,0,0,0,0,0,1,
-61,1,"Marque de joaillerie de Dalaran","INV_Misc_Gem_Variety_01",,0,0,0,0,0,1,"La boutique de Tiffany Kartier, à Dalaran, accepte avec joie ces marques contre des dessins de joaillerie uniques."
-81,1,"Récompense de l’épicurien","INV_Misc_Ribbon_01",,0,0,0,0,0,1,"Rendez visite aux marchands de fournitures de cuisine à Dalaran et dans les autres capitales pour acheter des recettes de cuisine spéciales, des épices, et même une superbe toque !"
-101,22,"Emblème d'héroïsme","Spell_Holy_ProclaimChampion",,0,0,0,0,0,1,
-102,22,"Emblème de vaillance","Spell_Holy_ProclaimChampion_02",,0,0,0,0,0,1,
-103,2,"Points d'arène","Spell_Holy_ChampionsBond",,0,0,0,0,0,1,
-104,2,"[PÉRIMÉ] Points d'honneur","Spell_Holy_ChampionsBond",,0,0,0,0,0,1,"Si vous lisez ceci, c'est un bug. SIGNALEZ-LE !"
-121,2,"Marque d'honneur de la vallée d'Alterac","INV_Jewelry_Necklace_21",,0,0,0,0,0,1,
-122,2,"Marque d'honneur du bassin Arathi","INV_Jewelry_Amulet_07",,0,0,0,0,0,1,
-123,2,"Marque d'honneur de l'Oeil du cyclone","Spell_Nature_EyeOfTheStorm",,0,0,0,0,0,1,
-124,2,"Marque d'honneur du rivage des Anciens","INV_Jewelry_Amulet_01",,0,0,0,0,0,1,
-125,2,"Marque d'honneur du goulet des Chanteguerres","INV_Misc_Rune_07",,0,0,0,0,0,1,
-126,2,"Marque d'honneur de Joug-d'hiver","INV_Jewelry_Ring_66",,0,0,0,0,0,1,
-141,0,"[VIEUX]Daily Quest Faction Token","Spell_Holy_ChampionsGrace",,0,0,0,0,0,1,
-161,2,"Eclat du gardien des pierres","INV_Misc_Platnumdisks",,0,0,0,0,0,1,
-181,2,"[PÉRIMÉ] Points d'honneur","INV_Banner_03",,0,0,0,0,0,1,"Si vous lisez ceci, c'est un bug. SIGNALEZ-LE !"
-201,2,"Pièce de la KapitalRisk","INV_Misc_Coin_16",,0,0,0,0,0,1,
-221,22,"Emblème de conquête","Spell_Holy_ChampionsGrace",,0,0,0,0,0,1,
-241,1,"Sceau de champion","Ability_Paladin_ArtofWar",,0,0,0,0,0,1,"Obtenu en récompense d’actes de bravoure au colisée des Croisés."
-301,22,"Emblème de triomphe","spell_holy_summonchampion",,0,0,0,0,0,1,
-321,2,"Marque d'honneur de l'île des Conquérants","INV_Jewelry_Necklace_27",,0,0,0,0,0,1,
-341,22,"Emblème de givre","inv_misc_frostemblem_01",,0,0,0,0,0,1,
-361,81,"Marque de l'illustre joaillier","inv_misc_token_argentdawn3",,0,0,0,0,0,1,"Accordées aux joailliers qui montrent un certain talent, ces récompenses peuvent être utilisées pour acheter des dessins de joaillerie uniques et le fabuleux œil de la chimère."
-384,82,"Fragment archéologique nain","trade_archaeology_dwarf_artifactfragment",,1,5,200,0,34,1,
-385,82,"Fragment archéologique troll","trade_archaeology_troll_artifactfragment",,1,4,200,0,34,1,
-390,2,"Points de conquête","pvpcurrency-conquest-horde",,0,0,0,0,20940,1,"Utilisés pour acheter des armures et armes de JcJ puissantes."
-391,2,"Recommandation de Tol Barad","achievement_zone_tolbarad",,0,0,0,0,2,1,"Obtenue en récompense d’actes de bravoure à Tol Barad."
-392,2,"Points d'honneur","pvpcurrency-honor-horde",,0,0,400099,0,16840,1,"Utilisés pour acheter des armures et armes de JcJ."
-393,82,"Fragment archéologique fossile","trade_archaeology_fossil_fern",,1,8,200,0,34,1,
-394,82,"Fragment archéologique elfe de la nuit","trade_archaeology_highborne_artifactfragment",,1,9,200,0,34,1,
-395,22,"Points de justice","pvecurrency-justice",,0,0,1,0,8280,1,"Utilisés pour acheter des armures et armes moyennement puissantes."
-396,22,"Points de vaillance","pvecurrency-valor",,0,0,300099,100000,24648,4,"Utilisés pour acheter des armures et armes de JcE puissantes."
-397,82,"Fragment d'archéologie orc","trade_archaeology_orc_artifactfragment",,1,10,200,0,34,1,
-398,82,"Fragment d'archéologie draeneï","trade_archaeology_draenei_artifactfragment",,1,11,200,0,34,1,
-399,82,"Fragment d'archéologie vrykul","trade_archaeology_vrykul_artifactfragment",,1,12,200,0,34,1,
-400,82,"Fragment d'archéologie nérubien","trade_archaeology_nerubian_artifactfragment",,1,13,200,0,34,1,
-401,82,"Fragment d'archéologie tol'vir","trade_archaeology_titan_fragment",,1,14,200,0,34,1,
-402,1,"Marque de Patte de Fer","inv_relics_idolofferocity",,0,0,0,0,0,1,"Représente votre mérite auprès de la communauté de la famille de cuisiniers, les Patte de Fer. Peut être utilisé pour acheter des ingrédients de cuisine et autres auprès du maître des provisions sur le marché de Micolline."
-416,1,"Marque de l'Arbre-Monde","inv_misc_markoftheworldtree",,0,0,0,0,1024,1,"Obtenue auprès des gardiens d'Hyjal. Peut être utilisée pour acheter des renforts pour l'invasion des terres de Feu."
-483,89,"Pts de conquête (méta) d'arène","pvpcurrency-conquest-horde",,0,0,0,0,1484,1,
-484,89,"Pts de conquête (méta) de CdB coté","pvpcurrency-conquest-horde",,0,0,0,0,1484,1,
-515,1,"Bon(s) pour un prix de Sombrelune","inv_misc_ticket_darkmoon_01",,0,0,0,0,2,1,"Obtenu en récompense de jeux ou de services rendus à la foire de Sombrelune."
-614,22,"Granule de ténèbres","spell_shadow_sealofkings",,0,0,0,0,1024,1,"Extraite des troupes d’Aile de mort, cette énergie sombre peut être utilisée pour générer de puissantes magies."
-615,22,"Essence d’Aile de mort corrompu","inv_elemental_primal_shadow","inv_elemental_primal_shadow",0,0,0,0,1024,1,"Extraite d’Aile de mort lui-même, cette énergie sombre alimente les plus effrayantes des incantations."
-676,82,"Fragment d'archéologie pandarène","trade_archaeology_vrykul_artifactfragment",,1,39,200,0,34,1,
-677,82,"Fragment d'archéologie mogu","trade_archaeology_vrykul_artifactfragment",,1,40,200,0,34,1,
-692,89,"Pts de conquête (méta) de CdB aléatoire","pvpcurrency-conquest-horde",,0,0,0,0,1484,1,
-697,133,"Breloque ancienne de bonne fortune","inv_misc_coin_17",,0,0,20,0,2114,1,"Posséder une breloque ancienne de bonne fortune permet à son chanceux propriétaire d’utiliser une pièce pour obtenir un butin supplémentaire aux caveaux Mogu’shan, au Cœur de la peur, à la terrasse Printanière, sur le sha de la colère ou la troupe de guerre de Salyis."
-698,133,"Marque du joaillier zen","trade_archaeology_titan_fragment",,0,0,0,0,0,1,"Accordées aux joailliers qui montrent un certain talent, ces récompenses peuvent être utilisées pour acheter des dessins de joaillerie uniques et le magnifique œil de serpent."
-738,133,"Breloque de bonne fortune inférieure","inv_misc_coin_18",,0,0,0,0,64,1,"Posséder des breloques de bonne fortune inférieures apportera une grande joie à son propriétaire et la possibilité de les convertir en sceaux de guerre, qui permettent aux personnages-joueurs d’utiliser une pièce pour obtenir un butin supplémentaire lors des rencontres de raid."
-752,133,"Rune du destin mogu","archaeology_5_0_mogucoin",,0,0,20,0,2,1,"Posséder une rune du destin mogu permet à son chanceux propriétaire de l’utiliser pour obtenir un butin supplémentaire au Trône du tonnerre, sur Nalak ou sur Oondasta."
-754,82,"Fragment d'archéologie mantide","inv_misc_archaeology_mantidstatue_01",,1,44,200,0,34,1,
-776,133,"Sceau de guerre","inv_arcane_orb",,0,0,20,0,2,1,"Posséder un sceau de guerre permet à son chanceux propriétaire de l’utiliser pour obtenir un butin supplémentaire au Siège d’Orgrimmar, aux épreuves des Astres vénérables et sur Ordos."
-777,133,"Pièce du Temps figé","timelesscoin",,0,0,0,0,16450,1,"Vous sentez les doigts des propriétaires passés et à venir de cette pièce, comme si le temps lui-même devenait flottant. Dépensez-la sur l’île du Temps figé pour obtenir des récompenses changeantes et puissantes. "
-789,133,"Pièce sanglante","timelesscoin-bloody",,0,0,0,0,16450,1,"Récupérée sur le corps des ennemis vaincus dans les brumes de l’île du Temps figé."
-810,133,"Fragment de fer noir","inv_stone_15",,0,0,0,0,16450,1,"Récupérés sur les armes et armures brisées des envahisseurs de la Horde de Fer."
-821,82,"Fragment d’archéologie des clans de Draenor","achievement_character_orc_male_brn",,1,45,250,0,34,1,
-823,137,"Cristal apogide","inv_apexis_draenor",,0,0,0,0,24578,2,"Héritage tenace d’une civilisation perdue, les cristaux apogides contiennent des réserves insoupçonnables de puissance magique."
-824,137,"Ressources de fief","inv_garrison_resource",,0,0,10000,0,16386,1,"Obtenez des ressources pour construire et faire prospérer votre fief."
-828,82,"Fragment d’archéologie ogre","spell_nature_rockbiter",,1,47,250,0,34,1,
-829,82,"Fragment d’archéologie arakkoa","achievement_dungeon_arakkoaspires",,1,46,250,0,34,1,
-830,82,"n/a",,,1,48,200,0,34,1,
-897,137,"Fragment de cristal","inv_datacrystal06",,0,0,100,0,8194,1,
-910,1,"Secret d’alchimiste de Draenor","trade_alchemy",,0,0,0,0,0,1,"Vous permet d’obtenir de nouvelles recettes d’alchimie au laboratoire d’alchimie."
-944,137,"Fragment d’artéfact","inv_ashran_artifact",,0,0,100000,0,8202,1,"Un minuscule fragment d’une relique perdue d’A’shran, conservé précieusement par les ogres de Cognefort."
-980,137,"Pièces de fer ternies","inv_misc_coin_09",,0,0,2000000,0,8,3,"Ils ont peut-être plus de valeur qu’ils ne le paraissent."
-994,137,"Sceau du destin trempé","ability_animusorbs",,0,0,20,0,16386,1,"Modifie le destin pour donner l’occasion de trouver un trésor supplémentaire dans les raids de Cognefort ou la fonderie des Rochenoires."
-999,1,"Secret de couturier de Draenor","trade_tailoring",,0,0,0,0,0,1,"Vous permet d’obtenir des patrons de couture à l’atelier de couture."
-1008,1,"Secret de joaillier de Draenor","inv_misc_gem_01",,0,0,0,0,0,1,"Permet d'obtenir de nouveaux dessins de joaillerie. "
-1017,1,"Secret de travailleur du cuir de Draenor","trade_leatherworking",,0,0,0,0,0,1,"Vous permet d’obtenir des patrons de travail du cuir à la tannerie."
-1020,1,"Secret de forgeron de Draenor","trade_blacksmithing",,0,0,0,0,0,1,"Permet d'obtenir de nouveaux plans de forge."
-1101,137,"Carburant","garrison_oil",,0,0,100000,0,16450,1,"Trouvé principalement dans la jungle de Tanaan, ce carburant est utilisé pour alimenter les navires lors des missions navales."
-1129,137,"Sceau du destin inévitable","achievement_battleground_templeofkotmogu_02_green",,0,0,10,0,16386,1,"Change le destin et donne l’occasion de trouver un trésor supplémentaire dans la citadelle des Flammes infernales ou dans les donjons mythiques."
+m_ID,Name,MaxQuantity,MaxWeekly,Flags,Description,Category,Unk0,Quality,InventoryIcon
+1,"Test Jeton de système de monnaie 4",0,0,71682,"Un texte qui décrit l'objet figure ici.",1,0,1,133792
+2,"Test Jeton de système de monnaie 2",0,0,12297,"",1,2,1,132092
+4,"Test Jeton de système de monnaie 5",0,0,1,"",1,3,1,133790
+22,"Birmingham Test Objet 3",0,0,0,"",41,0,1,132373
+42,"Ecusson de justice",0,0,0,"",1,0,1,135884
+61,"Marque de joaillerie de Dalaran",0,0,0,"La boutique de Tiffany Kartier à Dalaran accepte avec joie ces marques contre des dessins de joaillerie uniques.",21,0,1,134138
+81,"Récompense de l’épicurien",0,0,0,"Rendez visite aux marchands de fournitures de cuisine à Dalaran et dans les autres capitales pour acheter des recettes de cuisine spéciales des épices et même une superbe toque !",1,0,1,134411
+101,"Emblème d'héroïsme",0,0,0,"",22,0,1,135947
+102,"Emblème de vaillance",0,0,0,"",22,0,1,237547
+103,"Points d'arène",0,0,0,"",2,0,1,135884
+104,"[PÉRIMÉ] Points d'honneur",0,0,0,"Si vous lisez ceci c'est un bug. SIGNALEZ-LE !",2,0,1,135884
+121,"Marque d'honneur de la vallée d'Alterac",0,0,0,"",2,0,1,133308
+122,"Marque d'honneur du bassin Arathi",0,0,0,"",2,0,1,133282
+123,"Marque d'honneur de l'Oeil du cyclone",0,0,0,"",2,0,1,136032
+124,"Marque d'honneur du rivage des Anciens",0,0,0,"",2,0,1,133276
+125,"Marque d'honneur du goulet des Chanteguerres",0,0,0,"",2,0,1,134420
+126,"Marque d'honneur de Joug-d'hiver",0,0,0,"",2,0,1,133408
+161,"Eclat du gardien des pierres",0,0,0,"",2,0,1,134375
+181,"[PÉRIMÉ] Points d'honneur",0,0,0,"Si vous lisez ceci c'est un bug. SIGNALEZ-LE !",2,0,1,132484
+201,"Pièce de la KapitalRisk",0,0,0,"",2,0,1,133799
+221,"Emblème de conquête",0,0,0,"",22,0,1,135885
+241,"Sceau de champion",0,0,0,"Obtenu en récompense d’actes de bravoure au colisée des Croisés.",21,0,1,236246
+301,"Emblème de triomphe",0,0,0,"",22,0,1,135979
+321,"Marque d'honneur de l'île des Conquérants",0,0,0,"",2,0,1,133314
+341,"Emblème de givre",0,0,0,"",22,0,1,334365
+361,"Marque de l'illustre joaillier",0,0,0,"Accordées aux joailliers qui montrent un certain talent ces récompenses peuvent être utilisées pour acheter des dessins de joaillerie uniques et le fabuleux œil de la chimère.",81,0,1,134501
+384,"Fragment archéologique nain",200,0,34,"",82,5,1,441144
+385,"Fragment archéologique troll",200,0,34,"",82,4,1,441149
+391,"Recommandation de Tol Barad",0,0,2,"Obtenue en récompense d’actes de bravoure à Tol Barad.",2,0,1,409548
+393,"Fragment archéologique fossile",200,0,34,"",82,8,1,442734
+394,"Fragment archéologique elfe de la nuit",200,0,34,"",82,9,1,441146
+395,"Points de justice",1,0,8280,"Utilisés pour acheter des armures et armes moyennement puissantes.",142,0,1,463446
+396,"Points de vaillance",300099,100000,8264,"Utilisés pour acheter des armures et armes de JcE puissantes.",142,0,4,463447
+397,"Fragment d'archéologie orc",200,0,34,"",82,10,1,442738
+398,"Fragment d'archéologie draeneï",200,0,34,"",82,11,1,442731
+399,"Fragment d'archéologie vrykul",200,0,34,"",82,12,1,442742
+400,"Fragment d'archéologie nérubien",200,0,34,"",82,13,1,442736
+401,"Fragment d'archéologie tol'vir",200,0,34,"",82,14,1,442739
+402,"Marque de Patte de Fer",0,0,0,"Représente votre mérite auprès de la communauté de la famille de cuisiniers les Patte de Fer. Peut être utilisé pour acheter des ingrédients de cuisine et autres auprès du maître des provisions sur le marché de Micolline.",1,0,1,134912
+416,"Marque de l'Arbre-Monde",0,0,1024,"Obtenue auprès des gardiens d'Hyjal. Peut être utilisée pour acheter des renforts pour l'invasion des terres de Feu.",81,0,1,513195
+483,"Pts de conquête (méta) d'arène",0,0,1484,"",89,0,1,463449
+484,"Pts de conquête (méta) de CdB coté",0,0,1484,"",89,0,1,463449
+515,"Bon(s) pour un prix de Sombrelune",0,0,2,"Obtenu en récompense de jeux ou de services rendus à la foire de Sombrelune.",1,0,1,134481
+614,"Granule de ténèbres",0,0,1024,"Extraite des troupes d’Aile de mort cette énergie sombre peut être utilisée pour générer de puissantes magies.",81,0,1,136192
+615,"Essence d’Aile de mort corrompu",0,0,1024,"Extraite d’Aile de mort lui-même cette énergie sombre alimente les plus effrayantes des incantations.",81,0,1,132851
+676,"Fragment d'archéologie pandarène",200,0,34,"",82,39,1,442742
+677,"Fragment d'archéologie mogu",200,0,34,"",82,40,1,442742
+692,"Pts de conquête (méta) de CdB aléatoire",0,0,1484,"",89,0,1,463449
+697,"Breloque ancienne de bonne fortune",20,0,2114,"Posséder une breloque ancienne de bonne fortune permet à son chanceux propriétaire d’utiliser une pièce pour obtenir un butin supplémentaire aux caveaux Mogu’shan au Cœur de la peur à la terrasse Printanière sur le sha de la colère ou la troupe de guerre de Salyis.",133,0,1,237281
+698,"Marque du joaillier zen",0,0,0,"Accordées aux joailliers qui montrent un certain talent ces récompenses peuvent être utilisées pour acheter des dessins de joaillerie uniques et le magnifique œil de serpent.",133,0,1,442739
+738,"Breloque de bonne fortune inférieure",0,0,64,"Posséder des breloques de bonne fortune inférieures apportera une grande joie à son propriétaire et la possibilité de les convertir en sceaux de guerre qui permettent aux personnages-joueurs d’utiliser une pièce pour obtenir un butin supplémentaire lors des rencontres de raid.",133,0,1,237282
+752,"Rune du destin mogu",20,0,2,"Posséder une rune du destin mogu permet à son chanceux propriétaire de l’utiliser pour obtenir un butin supplémentaire au Trône du tonnerre sur Nalak ou sur Oondasta.",133,0,1,646678
+754,"Fragment d'archéologie mantide",200,0,34,"",82,44,1,839407
+776,"Sceau de guerre",20,0,2,"Posséder un sceau de guerre permet à son chanceux propriétaire de l’utiliser pour obtenir un butin supplémentaire au Siège d’Orgrimmar aux épreuves des Astres vénérables et sur Ordos.",133,0,1,514015
+777,"Pièce du Temps figé",0,0,66,"Vous sentez les doigts des propriétaires passés et à venir de cette pièce comme si le temps lui-même devenait flottant. Dépensez-la sur l’île du Temps figé pour obtenir des récompenses changeantes et puissantes. ",133,0,1,900319
+789,"Pièce sanglante",0,0,66,"Récupérée sur le corps des ennemis vaincus dans les brumes de l’île du Temps figé.",133,0,1,900318
+810,"Fragment de fer noir",0,0,66,"Récupérés sur les armes et armures brisées des envahisseurs de la Horde de Fer.",133,0,1,135241
+821,"Fragment d’archéologie des clans de Draenor",250,0,34,"",82,45,1,970886
+823,"Cristal apogide",0,0,8194,"Héritage tenace d’une civilisation perdue les cristaux apogides contiennent des réserves insoupçonnables de puissance magique.",137,0,2,1061300
+824,"Ressources de fief",10000,0,2,"Obtenez des ressources pour construire et faire prospérer votre fief.",137,0,1,1005027
+828,"Fragment d’archéologie ogre",250,0,34,"",82,47,1,136086
+829,"Fragment d’archéologie arakkoa",250,0,34,"",82,46,1,1002596
+830,"n/a",200,0,34,"",82,48,1,0
+897,"Fragment de cristal",100,0,8194,"",137,0,1,132780
+910,"Secret d’alchimiste de Draenor",0,0,0,"Vous permet d’obtenir de nouvelles recettes d’alchimie au laboratoire d’alchimie.",137,0,1,136240
+944,"Fragment d’artéfact",100000,0,8202,"Un minuscule fragment d’une relique perdue d’A’shran conservé précieusement par les ogres de Cognefort.",137,0,1,1061303
+980,"Pièces de fer ternies",2000000,0,8,"Ils ont peut-être plus de valeur qu’ils ne le paraissent.",137,0,3,133792
+994,"Sceau du destin trempé",20,0,2,"Modifie le destin pour donner l’occasion de trouver un trésor supplémentaire dans les raids de Cognefort ou la fonderie des Rochenoires.",137,0,1,838813
+999,"Secret de couturier de Draenor",0,0,0,"Vous permet d’obtenir des patrons de couture à l’atelier de couture.",137,0,1,136249
+1008,"Secret de joaillier de Draenor",0,0,0,"Permet d'obtenir de nouveaux dessins de joaillerie. ",137,0,1,134071
+1017,"Secret de travailleur du cuir de Draenor",0,0,0,"Vous permet d’obtenir des patrons de travail du cuir à la tannerie.",137,0,1,136247
+1020,"Secret de forgeron de Draenor",0,0,0,"Permet d'obtenir de nouveaux plans de forge.",137,0,1,136241
+1101,"Carburant",100000,0,66,"Trouvé principalement dans la jungle de Tanaan ce carburant est utilisé pour alimenter les navires lors des missions navales.",137,0,1,1131085
+1129,"Sceau du destin inévitable",20,0,2,"Modifie le destin pour donner l’occasion de trouver un trésor supplémentaire dans la citadelle des Flammes infernales ou dans les donjons mythiques de Draenor.",137,0,1,1119886
+1149,"Œil clos",5000,0,2,"Une pièce grossière frappée à la main. Elle est ornée d’un symbole qui rappelle celui du Kirin Tor à un détail près : l’œil est fermé.",141,0,1,801132
+1154,"Pièces ténébreuses",500,0,0,"Prisées des voleurs à la tire comme de leurs cibles. Peuvent être dépensées dans les Entrailles de Dalaran.",141,0,3,646678
+1155,"Mana ancestral",300,0,2359298,"Puissance magique concentrée provenant des lignes telluriques anciennes qui courent sous Suramar.",141,0,1,1377394
+1166,"Insigne distordu dans le temps",0,0,8194,"Obtenu dans les donjons des Marcheurs du temps. Peut être échangé auprès des vendeurs des Marcheurs du temps dans les capitales.",22,0,3,463446
+1171,"Connaissance de l’arme prodigieuse",0,0,525376,"Augmente les gains de puissance prodigieuse.",142,0,6,237446
+1172,"Fragment d’archéologie bien-né",200,0,34,"",82,51,1,441146
+1173,"Fragment d’archéologie taurène de Haut-Roc",200,0,34,"",82,52,1,441146
+1174,"Fragment d’archéologie démoniaque",200,0,34,"",82,54,1,441146
+1191,"Vaillance",5000,0,66,"Une monnaie utilisée pour augmenter la puissance des objets de la citadelle des Flammes infernales de la jungle de Tanaan des donjons de Draenor et de puissants objets d’artisanat.",22,0,4,463447
+1220,"Ressources de domaine",0,0,2,"Utilisées pour recruter des troupes effectuer des missions et rechercher des améliorations pour votre domaine de classe.",141,0,1,1397630
+1226,"Eclat de Néant",0,0,2,"Un fragment de Néant cristallisé apporté sur Azeroth par la Légion.",141,0,1,132775
+1268,"Artéfact érodé",100000,0,8202,"Mystérieux artéfact naga issu des profondeurs de la Grande mer. Le roi Mrgl-Mrgl écume le rivage Érodé à la recherche de tels objets.",141,0,1,1061303
+1273,"Sceau du destin brisé",6,0,2,"Modifie le destin pour donner l’occasion de trouver un trésor supplémentaire sur les boss de raid et de donjon mythiques de Legion.",141,0,1,1604167
+1275,"Pièce curieuse",0,0,2,"Cette monnaie étrange est chaude au toucher et vibre légèrement sous les doigts. Elle est utile pour faire affaire avec Xur’ios à Dalaran.",141,0,4,1604168
+1299,"Or des Bastonneurs",5000,0,2,"Obtenu par les vainqueurs des Bastonneurs. Utilisez-le pour acheter des cartes de bastonnade et autres objets de modification du monde auprès des changeurs d’or des Bastonneurs.",141,0,1,237281
+1314,"Fragment d’âme rémanente",40,20,2097218,"Fragment d’âme ayant autrefois appartenu à un ennemi puissant.",141,0,3,463284
+1324,"Crédit qiraji de la Horde",0,0,1638400,"Terminer cette quête confère à la Horde des crédits pour l’évènement de l’Appel du Scarabée.Les couleurs de la faction ayant gagné le plus de crédits aujourd’hui seront affichées auprès du gong du Scarabée pour le reste de l’année.",142,0,1,255132
+1325,"Crédit qiraji de l’Alliance",0,0,1638400,"Terminer cette quête confère à l’Alliance des crédits pour l’évènement de l’Appel du Scarabée.Les couleurs de la faction ayant gagné le plus de crédits aujourd’hui seront affichées auprès du gong du Scarabée pour le reste de l’année.",142,0,1,255130
+1342,"Fournitures de guerre du Déclin",1000,0,2,"Utilisées pour la construction de bâtiments importants au rivage Brisé.",141,0,2,803763
+1347,"Bâtiment du Déclin - Traqueur personnel - Tour des mages (invisi",0,0,1572864,"",142,0,0,0
+1349,"Bâtiment du Déclin - Traqueur personnel - Base stratégique (invi",0,0,1572864,"",142,0,0,0
+1350,"Bâtiment du Déclin - Traqueur personnel - Tour du Néant (invisib",0,0,1572864,"",142,0,0,0
+1355,"Essence gangrenée",0,0,0,"Essence démoniaque concentrée qui peut être collectée et utilisée pour créer une armure d’une grande puissance.",141,0,1,1044089
+1356,"Échos de bataille",0,0,384,"Utilisés pour acheter des armures de JcJ puissantes. Convertis en pièce d’or à la fin de la saison.",141,0,4,1455891
+1357,"Échos de domination",0,0,384,"Utilisés pour acheter des armures de JcJ d’élite. Convertis en pièce d’or à la fin de la saison.",141,0,4,1455894
+1379,"Marque de l’épreuve du style",200,0,0,"Remportée en participant à l’épreuve du style. Peut être échangée contre de l’équipement transmogrifié à Dalaran.",1,0,1,1500867
+1416,"Pièces d’air",2000000,0,0,"S’évapore dans la brume au bout d’un certain temps.",141,0,3,988196
+1501,"Essence frémissante",0,0,2,"Utilisée pour améliorer les objets légendaires de Legion jusqu’au niveau d’objet 970.",141,0,1,893779
+1506,"Pierre d’accès d’Argus",40,0,0,"Utilisées par les serviteurs de Sargeras pour ouvrir des portails entre Argus et les autres mondes contrôlés par la Légion.",142,0,3,399041
+1508,"Argunite voilée",2000,0,2,"Ce cristal terne et sans vie est très convoité par les marchands éthériens en particulier par le thaumaturge Vashreen à bord du Vindicaar.",141,0,3,1064188
+1533,"Essence d’éveil",0,0,2,"Utilisée pour améliorer les objets légendaires de Legion jusqu’au niveau d’objet 1000.",141,0,1,236521
