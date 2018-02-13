@@ -58,7 +58,7 @@ namespace WowHeadParser
 
         public String GetZoneHtmlFromWowhead(String zone)
         {
-            return Tools.GetHtmlFromWowhead(Tools.GetWowheadUrl("", zone));
+            return Tools.GetHtmlFromWowhead(Tools.GetWowheadUrl("zone", zone));
         }
 
         public void ParseZoneJson()

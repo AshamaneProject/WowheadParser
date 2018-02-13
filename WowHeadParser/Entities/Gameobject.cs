@@ -56,7 +56,7 @@ namespace WowHeadParser.Entities
 
         public override List<Entity> GetIdsFromZone(String zoneId, String zoneHtml)
         {
-            String pattern = @"new Listview\(\{template: 'object', id: 'objects', name: LANG.tab_objects, tabs: tabsRelated, parent: 'lkljbjkb574', note: \$WH.sprintf\(LANG\.lvnote_filterresults, '\/objects\?filter=cr=1;crs=" + zoneId + @";crv=0'\), data: (.+)\}\);";
+            String pattern = @"new Listview\(\{template: 'object', id: 'objects', name: LANG.tab_objects, tabs: tabsRelated, parent: 'lkljbjkb574', note: WH.sprintf\(LANG\.lvnote_filterresults, '\/objects\?filter=cr=1;crs=" + zoneId + @";crv=0'\), data: (.+)\}\);";
             String gameobjectJSon = Tools.ExtractJsonFromWithPattern(zoneHtml, pattern);
 
             List<GameObjectParsing> parsingArray = JsonConvert.DeserializeObject<List<GameObjectParsing>>(gameobjectJSon);
