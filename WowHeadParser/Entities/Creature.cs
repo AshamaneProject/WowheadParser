@@ -427,7 +427,7 @@ namespace WowHeadParser.Entities
                 returnSql += m_creatureTemplateBuilder.ToString() + "\n";
             }
 
-            if (IsCheckboxChecked("health modifier"))
+            if (IsCheckboxChecked("health modifier") && m_creatureTemplateData.health != null)
             {
                 SqlBuilder builder = new SqlBuilder("creature_template", "entry", SqlQueryType.Update);
                 builder.SetFieldsNames("HealthModifier");
