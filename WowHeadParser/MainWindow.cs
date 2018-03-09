@@ -196,6 +196,7 @@ namespace WowHeadParser
                 case 0:
                 {
                     selectList.Items.Add("template");
+                    selectList.Items.Add("health modifier");
                     selectList.Items.Add("locale");
                     selectList.Items.Add("vendor");
                     selectList.Items.Add("loot");

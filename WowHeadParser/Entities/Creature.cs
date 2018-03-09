@@ -30,9 +30,11 @@ namespace WowHeadParser.Entities
         public string name;
         public string tag; // subname
         public string[] react;
+        public String health;
 
         public String minGold;
         public String maxGold;
+        public float healthModifier;
     }
 
     class NpcVendorParsing
@@ -151,6 +153,7 @@ namespace WowHeadParser.Entities
             String dataPattern = @"\$\.extend\(g_npcs\[" + m_creatureTemplateData.id + @"\], (.+)\);";
             String modelPattern = @"ModelViewer\.show\(\{ type: [0-9]+, typeId: " + m_creatureTemplateData.id + @", displayId: ([0-9]+)";
             String vendorPattern = @"new Listview\({template: 'item', id: 'sells', .+?, data: (.+)}\);";
+            String creatureHealthPattern = @"<div>(?:Health|Vie) : ((?:\d|,|\.)+)</div>";
             String creatureLootPattern = @"new Listview\({template: 'item', id: 'drops', name: LANG\.tab_drops, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent(?:, Listview.extraCols.mode)?\],  showLootSpecs: [0-9],sort:\['-percent', 'name'\], _totalCount: [0-9]+, computeDataFunc: Listview\.funcBox\.initLootTable, onAfterCreate: Listview\.funcBox\.addModeIndicator, data: (.+)}\);";
             String creatureCurrencyPattern = @"new Listview\({template: 'currency', id: 'drop-currency', name: LANG\.tab_currencies, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'], _totalCount: [0-9]*, computeDataFunc: Listview\.funcBox\.initLootTable, onAfterCreate: Listview\.funcBox\.addModeIndicator, data: (.+)}\);";
             String creatureSkinningPattern = @"new Listview\(\{template: 'item', id: 'skinning', name: LANG\.tab_skinning, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: \$WH\.sprintf\(LANG\.lvnote_npcskinning, [0-9]+\), _totalCount: ([0-9]+), data: (.+)}\);";
@@ -160,9 +163,10 @@ namespace WowHeadParser.Entities
             String creatureMoneyPattern = @"money\\x3D([0-9]+)\\x5D";
 
             String creatureTemplateDataJSon = Tools.ExtractJsonFromWithPattern(creatureHtml, dataPattern);
+            String creatureHealthDataJSon   = Tools.ExtractJsonFromWithPattern(creatureHtml, creatureHealthPattern);
             String creatureMoneyData        = Tools.ExtractJsonFromWithPattern(creatureHtml, creatureMoneyPattern);
             CreatureTemplateParsing creatureTemplateData = JsonConvert.DeserializeObject<CreatureTemplateParsing>(creatureTemplateDataJSon);
-            SetCreatureTemplateData(creatureTemplateData, creatureMoneyData);
+            SetCreatureTemplateData(creatureTemplateData, creatureMoneyData, creatureHealthDataJSon);
 
             String npcVendorJSon = Tools.ExtractJsonFromWithPattern(creatureHtml, vendorPattern);
             if (npcVendorJSon != null)
@@ -215,7 +219,7 @@ namespace WowHeadParser.Entities
             return true;
         }
 
-        public void SetCreatureTemplateData(CreatureTemplateParsing creatureData, String money)
+        public void SetCreatureTemplateData(CreatureTemplateParsing creatureData, String money, String creatureHealthDataJSon)
         {
             m_creatureTemplateData = creatureData;
 
@@ -242,6 +246,8 @@ namespace WowHeadParser.Entities
                 m_creatureTemplateData.minGold = (((int)Math.Floor(averageMoney / roundNumber)) * roundNumber).ToString();
                 m_creatureTemplateData.maxGold = (((int)Math.Ceiling(averageMoney / roundNumber)) * roundNumber).ToString();
             }
+
+            m_creatureTemplateData.health = creatureHealthDataJSon.Replace(",", "");
         }
 
         public void SetNpcVendorData(NpcVendorParsing[] npcVendorDatas)
@@ -419,6 +425,17 @@ namespace WowHeadParser.Entities
 
                 m_creatureTemplateBuilder.AppendFieldsValue(m_creatureTemplateData.id, m_creatureTemplateData.minlevel, m_creatureTemplateData.maxlevel, m_creatureTemplateData.name, m_subname ?? "", m_modelid, m_isBoss ? "3" : "0", m_creatureTemplateData.type, m_creatureTemplateData.family);
                 returnSql += m_creatureTemplateBuilder.ToString() + "\n";
+            }
+
+            if (IsCheckboxChecked("health modifier"))
+            {
+                SqlBuilder builder = new SqlBuilder("creature_template", "entry", SqlQueryType.Update);
+                builder.SetFieldsNames("HealthModifier");
+
+                String healthModifier = Tools.GetHealthModifier(float.Parse(m_creatureTemplateData.health), 6, m_creatureTemplateData.minlevel, 1);
+
+                builder.AppendFieldsValue(m_creatureTemplateData.id, healthModifier);
+                returnSql += builder.ToString() + "\n";
             }
 
             // faction

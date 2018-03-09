@@ -131,6 +131,14 @@ namespace WowHeadParser
         public float GetPrecision()  { return HasPrecision() ? 100.0f : 1.0f; }
     };
 
+    public enum UnitClass
+    {
+        UNIT_CLASS_WARRIOR  = 1,
+        UNIT_CLASS_PALADIN  = 2,
+        UNIT_CLASS_ROGUE    = 4,
+        UNIT_CLASS_MAGE     = 8
+    };
+
     class Tools
     {
         public static HttpClient InitHttpClient()
@@ -164,7 +172,7 @@ namespace WowHeadParser
 
         public static String GetFileNameForCurrentTime()
         {
-            return DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss") + ".sql";
+            return DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss") + ".sql";
         }
 
         public static List<String> ExtractListJsonFromWithPattern(String input, String pattern)
@@ -228,10 +236,10 @@ namespace WowHeadParser
         {
             float returnFloat = value;
 
-            if (Math.Round(value) > (value - 0.10f))
+            if (Math.Floor(value) > (value - 0.10f))
                 returnFloat = (float)Math.Round(value);
 
-            if (Math.Round(value) < (value + 0.10f))
+            if (Math.Ceiling(value) < (value + 0.10f))
                 returnFloat = (float)Math.Round(value);
 
             if (Math.Round(value) == 0 && value != 0)
@@ -451,8 +459,58 @@ namespace WowHeadParser
             return Convert.ToUInt32(Math.Pow(2, classId - 1));
         }
 
+        public static void LoadBaseHps()
+        {
+            if (m_baseHpForLevelAndClass != null)
+                return;
+
+            List<String> BaseHpGts = new List<String>()
+            {
+                "NpcTotalHp.txt",
+                "NpcTotalHpExp1.txt",
+                "NpcTotalHpExp2.txt",
+                "NpcTotalHpExp3.txt",
+                "NpcTotalHpExp4.txt",
+                "NpcTotalHpExp5.txt",
+                "NpcTotalHpExp6.txt",
+            };
+
+            m_baseHpForLevelAndClass = new Dictionary<int, Dictionary<int, Dictionary<int, float>>>();
+
+            for (int i = 0; i < BaseHpGts.Count; ++i)
+            {
+                List<String> allLines = new List<String>(File.ReadAllLines("Ressources/" + BaseHpGts[i]));
+
+                allLines.RemoveAt(0);
+                m_baseHpForLevelAndClass.Add(i, new Dictionary<int, Dictionary<int, float>>());
+
+                for (int rowClassIndex = 0; rowClassIndex < allLines.Count; ++rowClassIndex)
+                {
+                    String[] values = allLines[rowClassIndex].Split('\t');
+                    int level = int.Parse(values[0]);
+
+                    m_baseHpForLevelAndClass[i].Add(level, new Dictionary<int, float>());
+                    m_baseHpForLevelAndClass[i][level].Add((int)UnitClass.UNIT_CLASS_ROGUE,  float.Parse(values[1].Replace(".", ",")));
+                    m_baseHpForLevelAndClass[i][level].Add((int)UnitClass.UNIT_CLASS_MAGE,   float.Parse(values[4].Replace(".", ",")));
+                    m_baseHpForLevelAndClass[i][level].Add((int)UnitClass.UNIT_CLASS_PALADIN,float.Parse(values[5].Replace(".", ",")));
+                    m_baseHpForLevelAndClass[i][level].Add((int)UnitClass.UNIT_CLASS_WARRIOR,float.Parse(values[9].Replace(".", ",")));
+                }
+            }
+        }
+
+        public static String GetHealthModifier(float currentHealth, int exp, int level, int classIndex)
+        {
+            LoadBaseHps();
+
+            float baseHp = m_baseHpForLevelAndClass[exp][level][classIndex];
+
+            return NormalizeFloat(currentHealth / baseHp);
+        }
+
         private static List<ItemExtendedCostEntry> m_itemExtendedCost = null;
         private static List<PlayerConditionEntry> m_playerConditions = null;
         private static Dictionary<UInt32, CurrencyTypesEntry> m_currencyTemplate = null;
+        //                        Exp             Level           Class
+        private static Dictionary<int, Dictionary<int, Dictionary<int, float>>> m_baseHpForLevelAndClass;
     }
 }
