@@ -156,7 +156,7 @@ namespace WowHeadParser.Entities
             String creatureHealthPattern = @"<div>(?:Health|Vie) : ((?:\d|,|\.)+)</div>";
             String creatureLootPattern = @"new Listview\({template: 'item', id: 'drops', name: LANG\.tab_drops, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent(?:, Listview.extraCols.mode)?\],  showLootSpecs: [0-9],sort:\['-percent', 'name'\], _totalCount: [0-9]+, computeDataFunc: Listview\.funcBox\.initLootTable, onAfterCreate: Listview\.funcBox\.addModeIndicator, data: (.+)}\);";
             String creatureCurrencyPattern = @"new Listview\({template: 'currency', id: 'drop-currency', name: LANG\.tab_currencies, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'], _totalCount: [0-9]*, computeDataFunc: Listview\.funcBox\.initLootTable, onAfterCreate: Listview\.funcBox\.addModeIndicator, data: (.+)}\);";
-            String creatureSkinningPattern = @"new Listview\(\{template: 'item', id: 'skinning', name: LANG\.tab_skinning, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: \$WH\.sprintf\(LANG\.lvnote_npcskinning, [0-9]+\), _totalCount: ([0-9]+), data: (.+)}\);";
+            String creatureSkinningPattern = @"new Listview\(\{template: 'item', id: 'skinning', name: LANG\.tab_skinning, tabs: tabsRelated, parent: 'lkljbjkb574', extraCols: \[Listview\.extraCols\.count, Listview\.extraCols\.percent\], sort:\['-percent', 'name'\], computeDataFunc: Listview\.funcBox\.initLootTable, note: WH\.sprintf\(LANG\.lvnote_npcskinning, [0-9]+\), _totalCount: ([0-9]+), data: (.+)}\);";
             String creatureTrainerPattern = @"new Listview\(\{template: 'spell', id: 'teaches-recipe', name: LANG\.tab_teaches, tabs: tabsRelated, parent: 'lkljbjkb574', visibleCols: \['source'\], data: (.+)\}\);";
             String creatureQuestStarterPattern = @"new Listview\(\{template: 'quest', id: 'starts', name: LANG\.tab_starts, tabs: tabsRelated, parent: 'lkljbjkb574', data: (.+)\}\);";
             String creatureQuestEnderPattern = @"new Listview\(\{template: 'quest', id: 'ends', name: LANG\.tab_ends, tabs: tabsRelated, parent: 'lkljbjkb574', data: (.+)\}\);";
@@ -247,7 +247,8 @@ namespace WowHeadParser.Entities
                 m_creatureTemplateData.maxGold = (((int)Math.Ceiling(averageMoney / roundNumber)) * roundNumber).ToString();
             }
 
-            m_creatureTemplateData.health = creatureHealthDataJSon.Replace(",", "");
+            if (creatureHealthDataJSon != null)
+                m_creatureTemplateData.health = creatureHealthDataJSon.Replace(",", "");
         }
 
         public void SetNpcVendorData(NpcVendorParsing[] npcVendorDatas)
@@ -504,9 +505,7 @@ namespace WowHeadParser.Entities
                 m_creatureLootBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
                 m_creatureReferenceLootBuilder = new SqlBuilder("reference_loot_template", "entry", SqlQueryType.DeleteInsert);
-                m_creatureReferenceLootBuilder.SetFieldsNames("item", "ChanceOrQuestChance", "lootmode", "groupid", "mincountOrRef", "maxcount", "itemBonuses");
-
-                bool atLeastOneNormal = false;
+                m_creatureReferenceLootBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
                 returnSql += "UPDATE creature_template SET lootid = " + templateEntry + " WHERE entry = " + templateEntry + " AND lootid = 0;\n";
                 foreach (CreatureLootParsing creatureLootData in m_creatureLootDatas)
@@ -527,33 +526,65 @@ namespace WowHeadParser.Entities
                     }
                     catch (Exception ex) { }
 
-                    switch (creatureLootData.mode)
+                    int minLootCount = creatureLootData.stack.Length >= 1 ? creatureLootData.stack[0] : 1;
+                    int maxLootCount = creatureLootData.stack.Length >= 2 ? creatureLootData.stack[1] : minLootCount;
+
+                    // If bonuses, certainly an important loot, set to references
+                    if (!IsCheckboxChecked("Is Dungeon/Raid Boss") || (creatureLootItemData == null || creatureLootItemData.bonustrees == null))
                     {
-                        default:
-                            entryList.Add(templateEntry);
-                            break; ;
+                        switch (creatureLootData.mode)
+                        {
+                            default:
+                                entryList.Add(templateEntry);
+                                break; ;
+                        }
+
+                        foreach (int entry in entryList)
+                        {
+                            int idMultiplier = creatureLootCurrencyData != null ? -1 : 1;
+
+                            if (idMultiplier < 1)
+                                continue;
+
+                            m_creatureLootBuilder.AppendFieldsValue(entry, // Entry
+                                                                    creatureLootData.id * idMultiplier, // Item
+                                                                    0, // Reference
+                                                                    creatureLootData.percent, // Chance
+                                                                    creatureLootData.questRequired, // QuestRequired
+                                                                    1, // LootMode
+                                                                    0, // GroupId
+                                                                    minLootCount, // MinCount
+                                                                    maxLootCount, // MaxCount
+                                                                    ""); // Comment
+                        }
                     }
-
-                    foreach (int entry in entryList)
+                    else
                     {
-                        int idMultiplier = creatureLootCurrencyData != null ? -1 : 1;
+                        if (!referenceAdded)
+                        {
+                            m_creatureLootBuilder.AppendFieldsValue(templateEntry, // Entry
+                                                                    0, // Item
+                                                                    templateEntry, // Reference
+                                                                    100, // Chance
+                                                                    0, // QuestRequired
+                                                                    1, // LootMode
+                                                                    0, // GroupId
+                                                                    maxReferenceLoot, // MinCount
+                                                                    maxReferenceLoot, // MaxCount
+                                                                    ""); // Comment
+                            referenceAdded = true;
+                        }
 
-                        if (idMultiplier < 1)
-                            continue;
-
-                        int minLootCount = creatureLootData.stack.Length >= 1 ? creatureLootData.stack[0]: 1;
-                        int maxLootCount = creatureLootData.stack.Length >= 2 ? creatureLootData.stack[1]: minLootCount;
-
-                        m_creatureLootBuilder.AppendFieldsValue(entry, // Entry
-                                                                creatureLootData.id * idMultiplier, // Item
-                                                                0, // Reference
-                                                                creatureLootData.percent, // Chance
-                                                                creatureLootData.questRequired, // QuestRequired
-                                                                1, // LootMode
-                                                                0, // GroupId
-                                                                minLootCount, // MinCount
-                                                                maxLootCount, // MaxCount
-                                                                ""); // Comment
+                        m_creatureReferenceLootBuilder.AppendFieldsValue(templateEntry, // Entry
+                                                                         creatureLootData.id, // Item
+                                                                         0, // Reference
+                                                                         creatureLootData.percent, // Chance
+                                                                         creatureLootData.questRequired, // QuestRequired
+                                                                         1, // LootMode
+                                                                         1, // GroupId
+                                                                         minLootCount, // MinCount
+                                                                         maxLootCount, // MaxCount
+                                                                         ""); // Comment
                     }
                 }
 
@@ -563,8 +594,8 @@ namespace WowHeadParser.Entities
 
             if (IsCheckboxChecked("skinning") && m_creatureSkinningDatas != null)
             {
-                m_creatureLootBuilder = new SqlBuilder("skinning_loot_template", "entry", SqlQueryType.DeleteInsert);
-                m_creatureLootBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
+                m_creatureSkinningBuilder = new SqlBuilder("skinning_loot_template", "entry", SqlQueryType.DeleteInsert);
+                m_creatureSkinningBuilder.SetFieldsNames("Item", "Reference", "Chance", "QuestRequired", "LootMode", "GroupId", "MinCount", "MaxCount", "Comment");
 
                 returnSql += "UPDATE creature_template SET skinloot = " + m_creatureTemplateData.id + " WHERE entry = " + m_creatureTemplateData.id + " AND skinloot = 0;\n";
                 foreach (CreatureLootParsing creatureSkinningData in m_creatureSkinningDatas)
@@ -601,26 +632,22 @@ namespace WowHeadParser.Entities
 
             if (IsCheckboxChecked("quest starter") && m_creatureQuestStarterDatas != null)
             {
-                m_creatureQuestStarterBuilder = new SqlBuilder("creature_queststarter", "entry", SqlQueryType.InsertIgnore);
+                m_creatureQuestStarterBuilder = new SqlBuilder("creature_queststarter", "entry", SqlQueryType.DeleteInsert);
                 m_creatureQuestStarterBuilder.SetFieldsNames("quest");
 
                 foreach (QuestStarterEnderParsing creatureQuestStarterData in m_creatureQuestStarterDatas)
-                {
                     m_creatureQuestStarterBuilder.AppendFieldsValue(m_creatureTemplateData.id, creatureQuestStarterData.id);
-                }
 
                 returnSql += m_creatureQuestStarterBuilder.ToString() + "\n";
             }
 
             if (IsCheckboxChecked("quest ender") && m_creatureQuestEnderDatas != null)
             {
-                m_creatureQuestEnderBuilder = new SqlBuilder("creature_questender", "entry", SqlQueryType.InsertIgnore);
+                m_creatureQuestEnderBuilder = new SqlBuilder("creature_questender", "entry", SqlQueryType.DeleteInsert);
                 m_creatureQuestEnderBuilder.SetFieldsNames("quest");
 
                 foreach (QuestStarterEnderParsing creatureQuestEnderData in m_creatureQuestEnderDatas)
-                {
                     m_creatureQuestEnderBuilder.AppendFieldsValue(m_creatureTemplateData.id, creatureQuestEnderData.id);
-                }
 
                 returnSql += m_creatureQuestEnderBuilder.ToString() + "\n";
             }

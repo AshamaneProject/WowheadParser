@@ -195,6 +195,7 @@ namespace WowHeadParser
                 // Creature
                 case 0:
                 {
+                    selectList.Items.Add("Is Dungeon/Raid Boss");
                     selectList.Items.Add("template");
                     selectList.Items.Add("health modifier");
                     selectList.Items.Add("locale");
