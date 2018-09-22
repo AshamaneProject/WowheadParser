@@ -4,7 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace WowHeadParser
@@ -143,9 +146,27 @@ namespace WowHeadParser
     {
         public static HttpClient InitHttpClient()
         {
+            ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
             return httpClient;
+        }
+
+        private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        {
+            // If the certificate is a valid, signed certificate, return true.
+            if (error == System.Net.Security.SslPolicyErrors.None)
+            {
+                return true;
+            }
+
+            Console.WriteLine("X509Certificate [{0}] Policy Error: '{1}'",
+                cert.Subject,
+                error.ToString());
+
+            return false;
         }
 
         public static String GetHtmlFromWowhead(String url, HttpClient webClient = null)
@@ -153,13 +174,22 @@ namespace WowHeadParser
             if (webClient == null)
                 webClient = InitHttpClient();
 
-            using (HttpResponseMessage response = webClient.GetAsync(url).Result)
+            try
             {
-                using (HttpContent content = response.Content)
+                using (HttpResponseMessage response = webClient.GetAsync(url).Result)
                 {
-                    return content.ReadAsStringAsync().Result;
+                    using (HttpContent content = response.Content)
+                    {
+                        return content.ReadAsStringAsync().Result;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+            }
+
+            return "";
         }
 
         public static String GetWowheadUrl(String type, String id)

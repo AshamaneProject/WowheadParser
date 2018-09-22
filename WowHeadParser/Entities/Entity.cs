@@ -30,7 +30,7 @@ namespace WowHeadParser.Entities
 
         static public void ReloadWowheadBaseUrl()
         {
-            m_baseWowheadUrl = "http://" + Properties.Settings.Default.wowheadLocale + ".wowhead.com";
+            m_baseWowheadUrl = "https://" + Properties.Settings.Default.wowheadLocale + ".wowhead.com";
         }
 
         public virtual String GetWowheadUrl() { return ""; }
